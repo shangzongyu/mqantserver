@@ -11,7 +11,7 @@ import (
 	"github.com/shangzongyu/mqant/module/base"
 )
 
-// 一定要记得在confin.json配置这个模块的参数,否则无法使用
+// 一定要记得在 confin.json 配置这个模块的参数,否则无法使用
 
 var Module = func() module.Module {
 	chat := new(Chat)
@@ -28,10 +28,12 @@ func (m *Chat) GetType() string {
 	//很关键,需要与配置文件中的Module配置对应
 	return "Chat"
 }
+
 func (m *Chat) Version() string {
 	//可以在监控时了解代码版本
 	return "1.0.0"
 }
+
 func (m *Chat) OnInit(app module.App, settings *conf.ModuleSettings) {
 	// 初始化模块
 	m.BaseModule.OnInit(m, app, settings)
@@ -44,7 +46,6 @@ func (m *Chat) OnInit(app module.App, settings *conf.ModuleSettings) {
 	//注册远程调用的函数
 	m.GetServer().RegisterGO("HD_JoinChat", m.joinChat) //我们约定所有对客户端的请求都以Handler_开头
 	m.GetServer().RegisterGO("HD_Say", m.say)           //我们约定所有对客户端的请求都以Handler_开头
-
 }
 
 func (m *Chat) Run(closeSig chan bool) {
@@ -177,10 +178,7 @@ func (m *Chat) say(session gate.Session, msg map[string]interface{}) (result map
 	return
 }
 
-/*
-*
-用户 断开连接 广播离线消息
-*/
+// onLeave 用户 断开连接 广播离线消息
 func (m *Chat) onLeave(roomName string, Userid string) {
 	userList := m.chats[roomName]
 	if userList == nil {

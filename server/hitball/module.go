@@ -1,18 +1,15 @@
-/*
-*
-一定要记得在confin.json配置这个模块的参数,否则无法使用
-*/
 package hitball
 
 import (
 	"encoding/json"
+	"math/rand"
+	"time"
+
 	"github.com/shangzongyu/mqant/conf"
 	"github.com/shangzongyu/mqant/gate"
 	"github.com/shangzongyu/mqant/log"
 	"github.com/shangzongyu/mqant/module"
 	"github.com/shangzongyu/mqant/module/base"
-	"math/rand"
-	"time"
 )
 
 var Module = func() module.Module {
@@ -20,6 +17,7 @@ var Module = func() module.Module {
 	return gate
 }
 
+// 一定要记得在confin.json配置这个模块的参数,否则无法使用
 type Hitball struct {
 	basemodule.BaseModule
 	room    *Room
@@ -27,7 +25,7 @@ type Hitball struct {
 	table   *Table
 }
 
-// 生成随机字符串
+// GetRandomString 生成随机字符串
 func GetRandomString(lenght int) string {
 	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := []byte(str)
@@ -38,47 +36,50 @@ func GetRandomString(lenght int) string {
 	}
 	return string(result)
 }
-func (self *Hitball) GetType() string {
+
+func (hb *Hitball) GetType() string {
 	//很关键,需要与配置文件中的Module配置对应
 	return "Hitball"
 }
-func (self *Hitball) Version() string {
+
+func (hb *Hitball) Version() string {
 	//可以在监控时了解代码版本
 	return "1.0.0"
 }
-func (self *Hitball) OnInit(app module.App, settings *conf.ModuleSettings) {
-	self.BaseModule.OnInit(self, app, settings)
-	self.room = NewRoom(self)
-	self.table, _ = self.room.GetEmptyTable()
-	//self.SetListener(new(chat.Listener))
-	self.GetServer().RegisterGO("HD_Move", self.move)
-	self.GetServer().RegisterGO("HD_Join", self.join)
-	self.GetServer().RegisterGO("HD_Fire", self.fire)
-	self.GetServer().RegisterGO("HD_EatCoin", self.eatCoin)
+
+func (hb *Hitball) OnInit(app module.App, settings *conf.ModuleSettings) {
+	hb.BaseModule.OnInit(hb, app, settings)
+	hb.room = NewRoom(hb)
+	hb.table, _ = hb.room.GetEmptyTable()
+	//hb.SetListener(new(chat.Listener))
+	hb.GetServer().RegisterGO("HD_Move", hb.move)
+	hb.GetServer().RegisterGO("HD_Join", hb.join)
+	hb.GetServer().RegisterGO("HD_Fire", hb.fire)
+	hb.GetServer().RegisterGO("HD_EatCoin", hb.eatCoin)
 }
 
-func (self *Hitball) Run(closeSig chan bool) {
-	self.table.Start()
+func (hb *Hitball) Run(closeSig chan bool) {
+	hb.table.Start()
 }
 
-func (self *Hitball) OnDestroy() {
+func (hb *Hitball) OnDestroy() {
 	//一定别忘了关闭RPC
-	self.GetServer().OnDestroy()
+	hb.GetServer().OnDestroy()
 }
 
-func (self *Hitball) join(session gate.Session, msg map[string]interface{}) (result string, err string) {
+func (hb *Hitball) join(session gate.Session, msg map[string]interface{}) (result string, err string) {
 	if session.GetUserId() == "" {
 		session.Bind(GetRandomString(8))
 		//return "","no login"
 	}
-	erro := self.table.PutQueue("Join", session)
+	erro := hb.table.PutQueue("Join", session)
 	if erro != nil {
 		return "", erro.Error()
 	}
 	return "success", ""
 }
 
-func (self *Hitball) fire(session gate.Session, msg map[string]interface{}) (result string, err string) {
+func (hb *Hitball) fire(session gate.Session, msg map[string]interface{}) (result string, err string) {
 	if msg["Angle"] == nil || msg["Power"] == nil || msg["X"] == nil || msg["Y"] == nil {
 		err = "Angle , Power X ,Y cannot be nil"
 		return
@@ -87,33 +88,33 @@ func (self *Hitball) fire(session gate.Session, msg map[string]interface{}) (res
 	Power := msg["Power"].(float64)
 	X := msg["X"].(float64)
 	Y := msg["Y"].(float64)
-	erro := self.table.PutQueue("Fire", session, float64(X), float64(Y), float64(Angle), float64(Power))
+	erro := hb.table.PutQueue("Fire", session, float64(X), float64(Y), float64(Angle), float64(Power))
 	if erro != nil {
 		return "", erro.Error()
 	}
 	return "success", ""
 }
 
-func (self *Hitball) eatCoin(session gate.Session, msg map[string]interface{}) (result string, err string) {
+func (hb *Hitball) eatCoin(session gate.Session, msg map[string]interface{}) (result string, err string) {
 	if msg["Id"] == nil {
 		err = "Id cannot be nil"
 		return
 	}
 	Id := int(msg["Id"].(float64))
-	erro := self.table.PutQueue("EatCoins", session, Id)
+	erro := hb.table.PutQueue("EatCoins", session, Id)
 	if erro != nil {
 		return "", erro.Error()
 	}
 	return "success", ""
 }
 
-func (self *Hitball) move(session gate.Session, msg map[string]interface{}) (result string, err string) {
+func (hb *Hitball) move(session gate.Session, msg map[string]interface{}) (result string, err string) {
 	if msg["war"] == nil || msg["wid"] == nil || msg["x"] == nil || msg["y"] == nil {
 		err = "war , wid ,x ,y cannot be nil"
 		return
 	}
-	//log.Debug("exct time %d", (time.Now().UnixNano()-self.proTime)/1000000)
-	//self.proTime = time.Now().UnixNano()
+	//log.Debug("exct time %d", (time.Now().UnixNano()-hb.proTime)/1000000)
+	//hb.proTime = time.Now().UnixNano()
 	//war := msg["war"].(string)
 	//wid := msg["wid"].(string)
 	x := msg["x"].(float64)

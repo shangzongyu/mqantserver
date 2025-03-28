@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package objects
 
 import (
@@ -41,46 +42,44 @@ type Player struct {
 	MaxPower    float64
 }
 
-/*
-*
-玩家主动发请求时间
-*/
-func (self *Player) OnRequest(session gate.Session) {
-	self.Session = session
-	self.LastRequestDate = time.Now().UnixNano()
+// OnRequest 玩家主动发请求时间
+func (p *Player) OnRequest(session gate.Session) {
+	p.Session = session
+	p.LastRequestDate = time.Now().UnixNano()
 }
 
-func (self *Player) OnSitDown() {
-	self.SitDown = true
+func (p *Player) OnSitDown() {
+	p.SitDown = true
 }
 
-func (self *Player) OnSitUp() {
-	self.SitDown = false
+func (p *Player) OnSitUp() {
+	p.SitDown = false
 }
 
-func (self *Player) OnNetBroken() {
-	self.NetBroken = time.Now().Unix()
+func (p *Player) OnNetBroken() {
+	p.NetBroken = time.Now().Unix()
 }
 
-func (self *Player) Move(friction float64) {
-	self.X = self.X + self.XSpeed
-	self.Y = self.Y + self.YSpeed
+func (p *Player) Move(friction float64) {
+	p.X = p.X + p.XSpeed
+	p.Y = p.Y + p.YSpeed
 	// reduce ball speed using friction 速度递减
-	self.XSpeed *= friction
-	self.YSpeed *= friction
+	p.XSpeed *= friction
+	p.YSpeed *= friction
 }
 
-func (self *Player) Rotate() {
-	self.Angle += float64(self.RotateSpeed * self.RotateDirection)
+func (p *Player) Rotate() {
+	p.Angle += float64(p.RotateSpeed * p.RotateDirection)
 }
-func (self *Player) Fire(X float64, Y float64, angle float64, power float64) {
+
+func (p *Player) Fire(X float64, Y float64, angle float64, power float64) {
 	//发射
-	self.XSpeed += math.Cos(angle*self.DegToRad) * power / 20
-	self.YSpeed += math.Sin(angle*self.DegToRad) * power / 20
-	self.Power = self.MinPower
-	//self.Angle=angle  //这里不同步客户端发过来的角速度
-	self.X = X
-	self.Y = Y
-	self.Power = power
-	self.RotateDirection *= -1
+	p.XSpeed += math.Cos(angle*p.DegToRad) * power / 20
+	p.YSpeed += math.Sin(angle*p.DegToRad) * power / 20
+	p.Power = p.MinPower
+	//p.Angle=angle  //这里不同步客户端发过来的角速度
+	p.X = X
+	p.Y = Y
+	p.Power = power
+	p.RotateDirection *= -1
 }

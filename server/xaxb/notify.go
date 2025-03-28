@@ -11,109 +11,88 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package xaxb
 
 import (
 	"encoding/json"
+
 	"github.com/shangzongyu/mqantserver/server/xaxb/objects"
 )
 
-/*
-*
-定期刷新所有玩家的位置
-*/
-func (self *Table) NotifyAxes() {
-	seats := []map[string]interface{}{}
-	for _, player := range self.seats {
-		if player.Bind() {
+// NotifyAxes 定期刷新所有玩家的位置
+func (t *Table) NotifyAxes() {
+	seats := make([]map[string]interface{}, 0)
+	for _, player := range t.seats {
+		if player.IsBind() {
 			seats = append(seats, player.SerializableMap())
 		}
 	}
+
 	b, _ := json.Marshal(map[string]interface{}{
-		"State":     self.State(),
-		"StateGame": self.fsm.getState(),
+		"State":     t.State(),
+		"StateGame": t.fsm.getState(),
 		"Seats":     seats,
 	})
-	self.NotifyCallBackMsg("XaXb/OnSync", b)
+
+	t.NotifyCallBackMsg("XaXb/OnSync", b)
 }
 
-/*
-*
-通知所有玩家有新玩家加入
-*/
-func (self *Table) NotifyJoin(player *objects.Player) {
+// NotifyJoin 通知所有玩家有新玩家加入
+
+func (t *Table) NotifyJoin(player *objects.Player) {
 	b, _ := json.Marshal(player.SerializableMap())
-	self.NotifyCallBackMsg("XaXb/OnEnter", b)
+	t.NotifyCallBackMsg("XaXb/OnEnter", b)
 }
 
-/*
-*
-通知所有玩家开始游戏了
-*/
-func (self *Table) NotifyResume() {
-	b, _ := json.Marshal(self.getSeatsMap())
-	self.NotifyCallBackMsg("XaXb/OnResume", b)
+// NotifyResume 通知所有玩家开始游戏了
+func (t *Table) NotifyResume() {
+	b, _ := json.Marshal(t.getSeatsMap())
+	t.NotifyCallBackMsg("XaXb/OnResume", b)
 }
 
-/*
-*
-通知所有玩家开始游戏了
-*/
-func (self *Table) NotifyPause() {
-	b, _ := json.Marshal(self.getSeatsMap())
-	self.NotifyCallBackMsg("XaXb/OnPause", b)
+// NotifyPause 通知所有玩家开始游戏了
+func (t *Table) NotifyPause() {
+	b, _ := json.Marshal(t.getSeatsMap())
+	t.NotifyCallBackMsg("XaXb/OnPause", b)
 }
 
-/*
-*
-通知所有玩家开始游戏了
-*/
-func (self *Table) NotifyStop() {
-	b, _ := json.Marshal(self.getSeatsMap())
-	self.NotifyCallBackMsg("XaXb/OnStop", b)
+// NotifyStop 通知所有玩家开始游戏了
+func (t *Table) NotifyStop() {
+	b, _ := json.Marshal(t.getSeatsMap())
+	t.NotifyCallBackMsg("XaXb/OnStop", b)
 }
 
-/*
-*
-通知所有玩家进入空闲期了
-*/
-func (self *Table) NotifyIdle() {
+// NotifyIdle 通知所有玩家进入空闲期了
+func (t *Table) NotifyIdle() {
 	b, _ := json.Marshal(map[string]interface{}{
 		"Coin": 500,
 	})
-	self.NotifyCallBackMsg("XaXb/Idle", b)
+	t.NotifyCallBackMsg("XaXb/Idle", b)
 }
 
-/*
-*
-通知所有玩家开始押注了
-*/
-func (self *Table) NotifyBetting() {
+// NotifyBetting 通知所有玩家开始押注了
+func (t *Table) NotifyBetting() {
 	b, _ := json.Marshal(map[string]interface{}{
 		"Coin": 500,
 	})
-	self.NotifyCallBackMsg("XaXb/Betting", b)
+
+	t.NotifyCallBackMsg("XaXb/Betting", b)
 }
 
-/*
-*
-通知所有玩家开始开奖了
-*/
-func (self *Table) NotifyOpening() {
+// NotifyOpening 通知所有玩家开始开奖了
+func (t *Table) NotifyOpening() {
 	b, _ := json.Marshal(map[string]interface{}{
 		"Coin": 500,
 	})
-	self.NotifyCallBackMsg("XaXb/Opening", b)
+	t.NotifyCallBackMsg("XaXb/Opening", b)
 }
 
-/*
-*
-通知所有玩家开奖结果出来了
-*/
-func (self *Table) NotifySettlement(Result int64) {
-	seats := []map[string]interface{}{}
-	for _, player := range self.seats {
-		if player.Bind() {
+// NotifySettlement 通知所有玩家开奖结果出来了
+func (t *Table) NotifySettlement(Result int64) {
+	seats := make([]map[string]interface{}, 0)
+	for _, player := range t.seats {
+		if player.IsBind() {
 			seats = append(seats, player.SerializableMap())
 		}
 	}
@@ -121,5 +100,5 @@ func (self *Table) NotifySettlement(Result int64) {
 		"Result": Result,
 		"Seats":  seats,
 	})
-	self.NotifyCallBackMsg("XaXb/Settlement", b)
+	t.NotifyCallBackMsg("XaXb/Settlement", b)
 }

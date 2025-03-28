@@ -11,12 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package xaba_task
 
 import (
-	"github.com/shangzongyu/armyant/task"
 	"io"
 	"os"
+
+	"github.com/shangzongyu/armyant/task"
 )
 
 type Manager struct {
@@ -24,20 +26,21 @@ type Manager struct {
 	Writer io.Writer
 }
 
-func (this *Manager) writer() io.Writer {
-	if this.Writer == nil {
+func (m *Manager) writer() io.Writer {
+	if m.Writer == nil {
 		return os.Stdout
 	}
-	return this.Writer
+
+	return m.Writer
 }
-func (this *Manager) Finish(task task.Task) {
+func (m *Manager) Finish(task task.Task) {
 	//total := time.Now().Sub(task.Start)
 }
-func (this *Manager) CreateWork() task.Work {
-	return NewWork(this)
+func (m *Manager) CreateWork() task.Work {
+	return NewWork(m)
 }
 
-// Run makes all the requests, prints the summary. It blocks until
+// NewManager Run makes all the requests, prints the summary. It blocks until
 // all work is done.
 func NewManager(t task.Task) task.WorkManager {
 	// append hey's user agent

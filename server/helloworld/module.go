@@ -1,7 +1,3 @@
-/*
-*
-一定要记得在confin.json配置这个模块的参数,否则无法使用
-*/
 package helloworld
 
 import (
@@ -11,6 +7,8 @@ import (
 	"github.com/shangzongyu/mqant/module"
 	"github.com/shangzongyu/mqant/module/base"
 )
+
+// 一定要记得在confin.json配置这个模块的参数,否则无法使用
 
 var Module = func() module.Module {
 	this := new(HellWorld)
@@ -25,10 +23,12 @@ func (m *HellWorld) GetType() string {
 	//很关键,需要与配置文件中的Module配置对应
 	return "HelloWorld"
 }
+
 func (m *HellWorld) Version() string {
 	//可以在监控时了解代码版本
 	return "1.0.0"
 }
+
 func (m *HellWorld) OnInit(app module.App, settings *conf.ModuleSettings) {
 	m.BaseModule.OnInit(m, app, settings)
 

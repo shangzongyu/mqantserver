@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 '''
 Created on 17/2/16.
 @author: love
 '''
+
 import paho.mqtt.client as mqtt
 import json
 import ssl
@@ -10,8 +10,6 @@ import ssl
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code %d"%rc)
     client.publish("Login/HD_Login/1", json.dumps({"userName": user, "passWord": "Hello,anyone!"}),qos=0,retain=False)
-
-
 
 def on_message(client, userdata, msg):
     print ('---------------')

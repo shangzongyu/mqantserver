@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package xaba_task
 
 import (
@@ -18,12 +19,13 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"time"
+
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"github.com/shangzongyu/armyant/task"
 	"github.com/shangzongyu/armyant/work"
 	"github.com/shangzongyu/mqant/utils"
-	"io/ioutil"
-	"time"
 )
 
 func NewWork(manager *Manager) *Work {

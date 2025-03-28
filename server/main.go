@@ -1,14 +1,17 @@
 package main
 
 import (
+	"fmt"
+	"math/rand"
+	"net/http"
+	_ "net/http/pprof"
+	"sync"
+
 	"github.com/nats-io/nats.go"
 	"github.com/shangzongyu/mqant"
 	"github.com/shangzongyu/mqant/gate"
-	"github.com/shangzongyu/mqant/module/modules"
-
-	//"github.com/shangzongyu/mqant-modules/tracing"
-	"fmt"
 	"github.com/shangzongyu/mqant/module"
+	"github.com/shangzongyu/mqant/module/modules"
 	"github.com/shangzongyu/mqant/registry"
 	"github.com/shangzongyu/mqant/selector"
 	"github.com/shangzongyu/mqantserver/server/chat"
@@ -19,10 +22,6 @@ import (
 	"github.com/shangzongyu/mqantserver/server/user"
 	"github.com/shangzongyu/mqantserver/server/xaxb"
 	"github.com/shangzongyu/mqantserver/webapp"
-	"math/rand"
-	"net/http"
-	_ "net/http/pprof"
-	"sync"
 )
 
 func main() {

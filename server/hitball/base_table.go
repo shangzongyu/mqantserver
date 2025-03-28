@@ -32,39 +32,37 @@ type QueueReceive interface {
 	Receive(msg *QueueMsg, index int)
 }
 type BaseTable struct {
-	functions       map[string]interface{}
-	receive         QueueReceive
-	queue0          *queue.EsQueue
-	queue1          *queue.EsQueue
-	current_w_queue int //当前写的队列
-	lock            *sync.RWMutex
+	functions     map[string]interface{}
+	receive       QueueReceive
+	queue0        *queue.EsQueue
+	queue1        *queue.EsQueue
+	currentWQueue int //当前写的队列
+	lock          *sync.RWMutex
 }
 
-func (self *BaseTable) Init() {
-	self.functions = map[string]interface{}{}
-	self.queue0 = queue.NewQueue(256)
-	self.queue1 = queue.NewQueue(256)
-	self.current_w_queue = 0
-	self.lock = new(sync.RWMutex)
+func (bat *BaseTable) Init() {
+	bat.functions = map[string]interface{}{}
+	bat.queue0 = queue.NewQueue(256)
+	bat.queue1 = queue.NewQueue(256)
+	bat.currentWQueue = 0
+	bat.lock = new(sync.RWMutex)
 }
-func (self *BaseTable) SetReceive(receive QueueReceive) {
-	self.receive = receive
-}
-func (self *BaseTable) Register(id string, f interface{}) {
 
-	if _, ok := self.functions[id]; ok {
+func (bat *BaseTable) SetReceive(receive QueueReceive) {
+	bat.receive = receive
+}
+func (bat *BaseTable) Register(id string, f interface{}) {
+
+	if _, ok := bat.functions[id]; ok {
 		panic(fmt.Sprintf("function id %v: already registered", id))
 	}
 
-	self.functions[id] = f
+	bat.functions[id] = f
 }
 
-/*
-*
-协成安全,任意协成可调用
-*/
-func (self *BaseTable) PutQueue(_func string, params ...interface{}) error {
-	ok, quantity := self.wqueue().Put(&QueueMsg{
+// PutQueue 协成安全,任意协成可调用
+func (bat *BaseTable) PutQueue(_func string, params ...interface{}) error {
+	ok, quantity := bat.wqueue().Put(&QueueMsg{
 		Func:   _func,
 		Params: params,
 	})
@@ -76,52 +74,46 @@ func (self *BaseTable) PutQueue(_func string, params ...interface{}) error {
 
 }
 
-/*
-*
-切换并且返回读的队列
-*/
-func (self *BaseTable) switchqueue() *queue.EsQueue {
-	self.lock.Lock()
-	if self.current_w_queue == 0 {
-		self.current_w_queue = 1
-		self.lock.Unlock()
-		return self.queue0
+// switchqueue 切换并且返回读的队列
+func (bat *BaseTable) switchqueue() *queue.EsQueue {
+	bat.lock.Lock()
+	if bat.currentWQueue == 0 {
+		bat.currentWQueue = 1
+		bat.lock.Unlock()
+		return bat.queue0
 	} else {
-		self.current_w_queue = 0
-		self.lock.Unlock()
-		return self.queue1
+		bat.currentWQueue = 0
+		bat.lock.Unlock()
+		return bat.queue1
 	}
 
 }
-func (self *BaseTable) wqueue() *queue.EsQueue {
-	self.lock.Lock()
-	if self.current_w_queue == 0 {
-		self.lock.Unlock()
-		return self.queue0
+func (bat *BaseTable) wqueue() *queue.EsQueue {
+	bat.lock.Lock()
+	if bat.currentWQueue == 0 {
+		bat.lock.Unlock()
+		return bat.queue0
 	} else {
-		self.lock.Unlock()
-		return self.queue1
+		bat.lock.Unlock()
+		return bat.queue1
 	}
 
 }
 
-/*
-*
-【每帧调用】执行队列中的所有事件
-*/
-func (self *BaseTable) ExecuteEvent(arge interface{}) {
+// ExecuteEvent 【每帧调用】执行队列中的所有事件
+func (bat *BaseTable) ExecuteEvent(arge interface{}) {
 	ok := true
-	queue := self.switchqueue()
+	queue := bat.switchqueue()
 	index := 0
 	for ok {
 		val, _ok, _ := queue.Get()
 		index++
 		if _ok {
-			if self.receive != nil {
-				self.receive.Receive(val.(*QueueMsg), index)
+			if bat.receive != nil {
+				bat.receive.Receive(val.(*QueueMsg), index)
 			} else {
 				msg := val.(*QueueMsg)
-				function, ok := self.functions[msg.Func]
+				function, ok := bat.functions[msg.Func]
 				if !ok {
 					fmt.Println(fmt.Sprintf("Remote function(%s) not found", msg.Func))
 					continue

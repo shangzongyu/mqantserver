@@ -16,8 +16,9 @@ package hitball
 
 import (
 	"fmt"
-	"github.com/shangzongyu/mqant/module"
 	"sync"
+
+	"github.com/shangzongyu/mqant/module"
 )
 
 type Room struct {
@@ -39,30 +40,30 @@ func NewRoom(module module.Module) *Room {
 	return room
 }
 
-func (self *Room) create(module module.Module) *Table {
-	self.lock.Lock()
-	self.index++
-	table := NewTable(module, self.index)
-	self.tables[self.index] = table
-	self.lock.Unlock()
+func (ro *Room) create(module module.Module) *Table {
+	ro.lock.Lock()
+	ro.index++
+	table := NewTable(module, ro.index)
+	ro.tables[ro.index] = table
+	ro.lock.Unlock()
 	return table
 }
 
-func (self *Room) GetTable(tableId int) *Table {
-	if table, ok := self.tables[tableId]; ok {
+func (ro *Room) GetTable(tableId int) *Table {
+	if table, ok := ro.tables[tableId]; ok {
 		return table
 	}
 	return nil
 }
 
-func (self *Room) GetEmptyTable() (*Table, error) {
-	for _, table := range self.tables {
+func (ro *Room) GetEmptyTable() (*Table, error) {
+	for _, table := range ro.tables {
 		if table.Empty() {
 			return table, nil
 		}
 	}
 	//没有找到已创建的空房间,新创建一个
-	table := self.create(self.module)
+	table := ro.create(ro.module)
 	if table == nil {
 		return nil, fmt.Errorf("fail create table")
 	}

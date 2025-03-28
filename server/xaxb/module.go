@@ -25,11 +25,13 @@
 //玩家金币用完后将被踢出房间
 
 // src/robot 中是猜数字游戏机器人
+
 package xaxb
 
 import (
 	"errors"
 	"fmt"
+
 	"github.com/shangzongyu/mqant-modules/room"
 	"github.com/shangzongyu/mqant/conf"
 	"github.com/shangzongyu/mqant/gate"

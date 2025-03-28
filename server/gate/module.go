@@ -71,10 +71,6 @@ func (gate *Gate) OnRequestTracing(session gate.Session, topic string, msg []byt
 		//没有登陆的用户不跟踪
 		return false
 	}
-	//if session.GetUserid()!="liangdas"{
-	//	//userId 不等于liangdas 的请求不跟踪
-	//	return false
-	//}
 	return true
 }
 
