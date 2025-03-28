@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,15 +15,15 @@ package xaxb
 
 import (
 	"container/list"
-	"github.com/liangdas/mqant-modules/room"
-	"github.com/liangdas/mqant/gate"
-	"github.com/liangdas/mqant/log"
-	"github.com/liangdas/mqant/module"
-	"github.com/liangdas/mqant/module/modules/timer"
+	"github.com/shangzongyu/mqant-modules/room"
+	"github.com/shangzongyu/mqant/gate"
+	"github.com/shangzongyu/mqant/log"
+	"github.com/shangzongyu/mqant/module"
+	"github.com/shangzongyu/mqant/module/modules/timer"
+	"github.com/shangzongyu/mqantserver/server/xaxb/objects"
 	"math/rand"
 	"sync"
 	"time"
-	"github.com/liangdas/mqantserver/server/xaxb/objects"
 )
 
 func init() {
@@ -98,49 +98,50 @@ func NewTable(module module.RPCModule, tableId int) *Table {
 
 	return this
 }
-func (this *Table) GetModule() module.RPCModule {
-	return this.module
+func (self *Table) GetModule() module.RPCModule {
+	return self.module
 }
-func (this *Table) GetSeats() []room.BasePlayer {
-	m := make([]room.BasePlayer, len(this.seats))
-	for i, seat := range this.seats {
+func (self *Table) GetSeats() []room.BasePlayer {
+	m := make([]room.BasePlayer, len(self.seats))
+	for i, seat := range self.seats {
 		m[i] = seat
 	}
 	return m
 }
-func (this *Table) GetViewer() *list.List {
-	return this.viewer
+func (self *Table) GetViewer() *list.List {
+	return self.viewer
 }
 
-/**
+/*
+*
 玩家断线,游戏暂停
 */
 func (self *Table) OnNetBroken(player room.BasePlayer) {
 	player.OnNetBroken()
 }
 
-////访问权限校验
-func (this *Table) VerifyAccessAuthority(userId string, bigRoomId string) bool {
+// //访问权限校验
+func (self *Table) VerifyAccessAuthority(userId string, bigRoomId string) bool {
 	_, tableid, transactionId, err := room.ParseBigRoomId(bigRoomId)
 	if err != nil {
 		log.Error(err.Error())
 		return false
 	}
-	if (tableid != this.TableId()) || (transactionId != this.TransactionId()) {
-		log.Error("transactionId!=this.TransactionId()", transactionId, this.TransactionId())
+	if (tableid != self.TableId()) || (transactionId != self.TransactionId()) {
+		log.Error("transactionId!=this.TransactionId()", transactionId, self.TransactionId())
 		return false
 	}
 	return true
 }
-func (this *Table) AllowJoin() bool {
-	this.writelock.Lock()
+func (self *Table) AllowJoin() bool {
+	self.writelock.Lock()
 	ready := true
-	if this.current_id > 2 {
-		this.writelock.Unlock()
+	if self.current_id > 2 {
+		self.writelock.Unlock()
 		return false
 	}
-	this.current_id++
-	this.writelock.Unlock()
+	self.current_id++
+	self.writelock.Unlock()
 	return true
 	//for _, seat := range this.GetSeats() {
 	//	if seat.Bind() == false {
@@ -152,13 +153,13 @@ func (this *Table) AllowJoin() bool {
 
 	return !ready
 }
-func (this *Table) OnCreate() {
-	this.BaseTableImp.OnCreate()
-	this.ResetTimeOut()
+func (self *Table) OnCreate() {
+	self.BaseTableImp.OnCreate()
+	self.ResetTimeOut()
 	log.Debug("Table", "OnCreate")
-	if this.stoped {
-		this.stoped = false
-		timewheel.GetTimeWheel().AddTimer(1000*time.Millisecond, nil, this.Update)
+	if self.stoped {
+		self.stoped = false
+		timewheel.GetTimeWheel().AddTimer(1000*time.Millisecond, nil, self.Update)
 		//go func() {
 		//	//这里设置为500ms
 		//	tick := time.NewTicker(1000 * time.Millisecond)
@@ -174,62 +175,63 @@ func (this *Table) OnCreate() {
 		//}()
 	}
 }
-func (this *Table) OnStart() {
+func (self *Table) OnStart() {
 	log.Debug("Table", "OnStart")
-	for _, player := range this.seats {
+	for _, player := range self.seats {
 		player.Coin = 100000
 		player.Weight = 0
 		player.Target = 0
 		player.Stake = false
 	}
 	//将游戏状态设置到空闲期
-	this.fsm.Call(IdlePeriodEvent)
-	this.step1 = 0
-	this.step2 = 0
-	this.step3 = 0
-	this.step4 = 0
-	this.current_frame = 0
-	this.sync_frame = 0
-	this.BaseTableImp.OnStart()
+	self.fsm.Call(IdlePeriodEvent)
+	self.step1 = 0
+	self.step2 = 0
+	self.step3 = 0
+	self.step4 = 0
+	self.current_frame = 0
+	self.sync_frame = 0
+	self.BaseTableImp.OnStart()
 }
-func (this *Table) OnResume() {
-	this.BaseTableImp.OnResume()
+func (self *Table) OnResume() {
+	self.BaseTableImp.OnResume()
 	log.Debug("Table", "OnResume")
-	this.NotifyResume()
+	self.NotifyResume()
 }
-func (this *Table) OnPause() {
-	this.BaseTableImp.OnPause()
+func (self *Table) OnPause() {
+	self.BaseTableImp.OnPause()
 	log.Debug("Table", "OnPause")
-	this.NotifyPause()
+	self.NotifyPause()
 }
-func (this *Table) OnStop() {
-	this.BaseTableImp.OnStop()
+func (self *Table) OnStop() {
+	self.BaseTableImp.OnStop()
 	log.Debug("Table", "OnStop")
 	//将游戏状态设置到空档期
-	this.fsm.Call(VoidPeriodEvent)
-	this.NotifyStop()
-	this.ExecuteCallBackMsg() //统一发送数据到客户端
-	for _, player := range this.seats {
+	self.fsm.Call(VoidPeriodEvent)
+	self.NotifyStop()
+	self.ExecuteCallBackMsg() //统一发送数据到客户端
+	for _, player := range self.seats {
 		player.OnUnBind()
 	}
 
 	var nv *list.Element
-	for e := this.viewer.Front(); e != nil; e = nv {
+	for e := self.viewer.Front(); e != nil; e = nv {
 		nv = e.Next()
-		this.viewer.Remove(e)
+		self.viewer.Remove(e)
 	}
 }
-func (this *Table) OnDestroy() {
-	this.BaseTableImp.OnDestroy()
+func (self *Table) OnDestroy() {
+	self.BaseTableImp.OnDestroy()
 	log.Debug("BaseTableImp", "OnDestroy")
-	this.stoped = true
+	self.stoped = true
 }
 
 func (self *Table) onGameOver() {
 	self.Finish()
 }
 
-/**
+/*
+*
 牌桌主循环
 定帧计算所有玩家的位置
 */
@@ -298,7 +300,8 @@ func (self *Table) getSeatsMap() []map[string]interface{} {
 	return m
 }
 
-/**
+/*
+*
 玩家获取关卡信息
 */
 func (self *Table) getLevel(session gate.Session) {

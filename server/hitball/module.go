@@ -1,15 +1,16 @@
-/**
+/*
+*
 一定要记得在confin.json配置这个模块的参数,否则无法使用
 */
 package hitball
 
 import (
 	"encoding/json"
-	"github.com/liangdas/mqant/conf"
-	"github.com/liangdas/mqant/gate"
-	"github.com/liangdas/mqant/log"
-	"github.com/liangdas/mqant/module"
-	"github.com/liangdas/mqant/module/base"
+	"github.com/shangzongyu/mqant/conf"
+	"github.com/shangzongyu/mqant/gate"
+	"github.com/shangzongyu/mqant/log"
+	"github.com/shangzongyu/mqant/module"
+	"github.com/shangzongyu/mqant/module/base"
 	"math/rand"
 	"time"
 )
@@ -26,7 +27,7 @@ type Hitball struct {
 	table   *Table
 }
 
-//生成随机字符串
+// 生成随机字符串
 func GetRandomString(lenght int) string {
 	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := []byte(str)

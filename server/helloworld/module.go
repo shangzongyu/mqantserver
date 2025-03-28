@@ -1,14 +1,15 @@
-/**
+/*
+*
 一定要记得在confin.json配置这个模块的参数,否则无法使用
 */
 package helloworld
 
 import (
 	"fmt"
-	"github.com/liangdas/mqant/conf"
-	"github.com/liangdas/mqant/gate"
-	"github.com/liangdas/mqant/module"
-	"github.com/liangdas/mqant/module/base"
+	"github.com/shangzongyu/mqant/conf"
+	"github.com/shangzongyu/mqant/gate"
+	"github.com/shangzongyu/mqant/module"
+	"github.com/shangzongyu/mqant/module/base"
 )
 
 var Module = func() module.Module {

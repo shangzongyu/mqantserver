@@ -4,24 +4,25 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package chat
 
 import (
 	"fmt"
-	"github.com/liangdas/mqant/gate"
-	"github.com/liangdas/mqant/log"
-	"github.com/liangdas/mqant/module"
-	"github.com/liangdas/mqant/rpc"
-	"github.com/liangdas/mqant/rpc/pb"
-	"github.com/liangdas/mqant/rpc/util"
 	"github.com/pkg/errors"
+	"github.com/shangzongyu/mqant/gate"
+	"github.com/shangzongyu/mqant/log"
+	"github.com/shangzongyu/mqant/module"
+	"github.com/shangzongyu/mqant/rpc"
+	"github.com/shangzongyu/mqant/rpc/pb"
+	"github.com/shangzongyu/mqant/rpc/util"
 )
 
 type Listener struct {
@@ -62,7 +63,8 @@ func (l *Listener) OnError(fn string, callInfo *mqrpc.CallInfo, err error) {
 	log.Error("请求(%s)出现异常 error(%s)!", fn, err.Error())
 }
 
-/**
+/*
+*
 fn 		方法名
 params		参数
 result		执行结果

@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,9 +16,9 @@ package hitball
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/liangdas/mqant/gate"
-	"github.com/liangdas/mqant/module"
-	"github.com/liangdas/mqantserver/server/hitball/objects"
+	"github.com/shangzongyu/mqant/gate"
+	"github.com/shangzongyu/mqant/module"
+	"github.com/shangzongyu/mqantserver/server/hitball/objects"
 	"github.com/yireyun/go-queue"
 	"math/rand"
 	"time"
@@ -68,7 +68,8 @@ func (self *Table) notifyCallBackMsg(topic string, body []byte) error {
 	}
 }
 
-/**
+/*
+*
 【每帧调用】统一发送所有消息给各个客户端
 */
 func (self *Table) executeCallBackMsg() {
@@ -175,7 +176,8 @@ func (self *Table) Stop() {
 	self.stoped = true
 }
 
-/**
+/*
+*
 定帧计算所有玩家的位置
 */
 func (self *Table) Update(arge interface{}) {
@@ -208,7 +210,8 @@ func (self *Table) Update(arge interface{}) {
 	self.executeCallBackMsg() //统一发送数据到客户端
 }
 
-/**
+/*
+*
 添加一个金币
 */
 func (self *Table) addCoins() {
@@ -226,7 +229,8 @@ func (self *Table) addCoins() {
 	self.NotifyAddCoins(coins) //广播给所有其他玩家
 }
 
-/**
+/*
+*
 玩家吃了金币
 */
 func (self *Table) eatCoins(session gate.Session, Id int) {
@@ -236,7 +240,8 @@ func (self *Table) eatCoins(session gate.Session, Id int) {
 	}
 }
 
-/**
+/*
+*
 玩家加入场景
 */
 func (self *Table) join(session gate.Session) {
@@ -280,7 +285,8 @@ func (self *Table) remove(Rid string) error {
 	return nil
 }
 
-/**
+/*
+*
 玩家点击屏幕开始奔跑
 */
 func (self *Table) fire(session gate.Session, X float64, Y float64, angle float64, power float64) {
@@ -291,7 +297,8 @@ func (self *Table) fire(session gate.Session, X float64, Y float64, angle float6
 	}
 }
 
-/**
+/*
+*
 定期刷新所有玩家的位置
 */
 func (self *Table) NotifyAxes(arge interface{}) {
@@ -299,7 +306,8 @@ func (self *Table) NotifyAxes(arge interface{}) {
 	self.notifyCallBackMsg("Hitball/OnMove", b)
 }
 
-/**
+/*
+*
 通知所有玩家有新玩家加入
 */
 func (self *Table) NotifyJoin(player *objects.Player) {
@@ -307,7 +315,8 @@ func (self *Table) NotifyJoin(player *objects.Player) {
 	self.notifyCallBackMsg("Hitball/OnJoin", b)
 }
 
-/**
+/*
+*
 通知所有玩家新加了金币
 */
 func (self *Table) NotifyAddCoins(coins *objects.Coins) {
@@ -315,7 +324,8 @@ func (self *Table) NotifyAddCoins(coins *objects.Coins) {
 	self.notifyCallBackMsg("Hitball/OnAddCoins", b)
 }
 
-/**
+/*
+*
 通知所有玩家金币已经被吃掉
 */
 func (self *Table) NotifyEatCoins(coins *objects.Coins) {
@@ -323,7 +333,8 @@ func (self *Table) NotifyEatCoins(coins *objects.Coins) {
 	self.notifyCallBackMsg("Hitball/OnEatCoins", b)
 }
 
-/**
+/*
+*
 检查小球是否超出世界范围
 */
 func (self *Table) wallBounce(player *objects.Player) {

@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,10 +15,11 @@ package xaxb
 
 import (
 	"encoding/json"
-	"github.com/liangdas/mqantserver/server/xaxb/objects"
+	"github.com/shangzongyu/mqantserver/server/xaxb/objects"
 )
 
-/**
+/*
+*
 定期刷新所有玩家的位置
 */
 func (self *Table) NotifyAxes() {
@@ -36,7 +37,8 @@ func (self *Table) NotifyAxes() {
 	self.NotifyCallBackMsg("XaXb/OnSync", b)
 }
 
-/**
+/*
+*
 通知所有玩家有新玩家加入
 */
 func (self *Table) NotifyJoin(player *objects.Player) {
@@ -44,7 +46,8 @@ func (self *Table) NotifyJoin(player *objects.Player) {
 	self.NotifyCallBackMsg("XaXb/OnEnter", b)
 }
 
-/**
+/*
+*
 通知所有玩家开始游戏了
 */
 func (self *Table) NotifyResume() {
@@ -52,7 +55,8 @@ func (self *Table) NotifyResume() {
 	self.NotifyCallBackMsg("XaXb/OnResume", b)
 }
 
-/**
+/*
+*
 通知所有玩家开始游戏了
 */
 func (self *Table) NotifyPause() {
@@ -60,7 +64,8 @@ func (self *Table) NotifyPause() {
 	self.NotifyCallBackMsg("XaXb/OnPause", b)
 }
 
-/**
+/*
+*
 通知所有玩家开始游戏了
 */
 func (self *Table) NotifyStop() {
@@ -68,7 +73,8 @@ func (self *Table) NotifyStop() {
 	self.NotifyCallBackMsg("XaXb/OnStop", b)
 }
 
-/**
+/*
+*
 通知所有玩家进入空闲期了
 */
 func (self *Table) NotifyIdle() {
@@ -78,7 +84,8 @@ func (self *Table) NotifyIdle() {
 	self.NotifyCallBackMsg("XaXb/Idle", b)
 }
 
-/**
+/*
+*
 通知所有玩家开始押注了
 */
 func (self *Table) NotifyBetting() {
@@ -88,7 +95,8 @@ func (self *Table) NotifyBetting() {
 	self.NotifyCallBackMsg("XaXb/Betting", b)
 }
 
-/**
+/*
+*
 通知所有玩家开始开奖了
 */
 func (self *Table) NotifyOpening() {
@@ -98,7 +106,8 @@ func (self *Table) NotifyOpening() {
 	self.NotifyCallBackMsg("XaXb/Opening", b)
 }
 
-/**
+/*
+*
 通知所有玩家开奖结果出来了
 */
 func (self *Table) NotifySettlement(Result int64) {

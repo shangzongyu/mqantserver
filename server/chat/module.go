@@ -1,17 +1,17 @@
-/**
-一定要记得在confin.json配置这个模块的参数,否则无法使用
-*/
 package chat
 
 import (
 	"encoding/json"
-	"github.com/liangdas/mqant/conf"
-	"github.com/liangdas/mqant/gate"
-	"github.com/liangdas/mqant/log"
-	"github.com/liangdas/mqant/module"
-	"github.com/liangdas/mqant/module/base"
 	"time"
+
+	"github.com/shangzongyu/mqant/conf"
+	"github.com/shangzongyu/mqant/gate"
+	"github.com/shangzongyu/mqant/log"
+	"github.com/shangzongyu/mqant/module"
+	"github.com/shangzongyu/mqant/module/base"
 )
+
+// 一定要记得在confin.json配置这个模块的参数,否则无法使用
 
 var Module = func() module.Module {
 	chat := new(Chat)
@@ -33,7 +33,7 @@ func (m *Chat) Version() string {
 	return "1.0.0"
 }
 func (m *Chat) OnInit(app module.App, settings *conf.ModuleSettings) {
-	//初始化模块
+	// 初始化模块
 	m.BaseModule.OnInit(m, app, settings)
 
 	m.chats = map[string]map[string]gate.Session{}
@@ -177,7 +177,8 @@ func (m *Chat) say(session gate.Session, msg map[string]interface{}) (result map
 	return
 }
 
-/**
+/*
+*
 用户 断开连接 广播离线消息
 */
 func (m *Chat) onLeave(roomName string, Userid string) {

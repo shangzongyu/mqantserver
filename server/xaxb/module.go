@@ -24,18 +24,18 @@
 //哪个玩家猜中的数字与系统开出的数字最近就算赢,可以赢取所有玩家本局押注的金币*80%
 //玩家金币用完后将被踢出房间
 
-//src/robot 中是猜数字游戏机器人
+// src/robot 中是猜数字游戏机器人
 package xaxb
 
 import (
 	"errors"
 	"fmt"
-	"github.com/liangdas/mqant-modules/room"
-	"github.com/liangdas/mqant/conf"
-	"github.com/liangdas/mqant/gate"
-	"github.com/liangdas/mqant/module"
-	"github.com/liangdas/mqant/module/base"
-	"github.com/liangdas/mqant/server"
+	"github.com/shangzongyu/mqant-modules/room"
+	"github.com/shangzongyu/mqant/conf"
+	"github.com/shangzongyu/mqant/gate"
+	"github.com/shangzongyu/mqant/module"
+	"github.com/shangzongyu/mqant/module/base"
+	"github.com/shangzongyu/mqant/server"
 )
 
 var Module = func() module.Module {
@@ -97,7 +97,8 @@ func (self *xaxb) OnDestroy() {
 	self.GetServer().OnDestroy()
 }
 
-/**
+/*
+*
 检查参数是否存在
 */
 func (self *xaxb) ParameterCheck(msg map[string]interface{}, paras ...string) error {
@@ -109,7 +110,8 @@ func (self *xaxb) ParameterCheck(msg map[string]interface{}, paras ...string) er
 	return nil
 }
 
-/**
+/*
+*
 检查参数是否存在
 */
 func (self *xaxb) GetTableByBigRoomId(bigRoomId string) (*Table, error) {
@@ -126,14 +128,16 @@ func (self *xaxb) GetTableByBigRoomId(bigRoomId string) (*Table, error) {
 	}
 }
 
-/**
+/*
+*
 创建一个房间
 */
 func (self *xaxb) HDGetUsableTable(session gate.Session, msg map[string]interface{}) (map[string]interface{}, string) {
 	return self.getUsableTable(session)
 }
 
-/**
+/*
+*
 创建一个房间
 */
 func (self *xaxb) getUsableTable(session gate.Session) (map[string]interface{}, string) {

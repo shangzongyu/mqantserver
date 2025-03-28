@@ -1,24 +1,24 @@
 package main
 
 import (
-	"github.com/liangdas/mqant"
-	"github.com/liangdas/mqant/gate"
-	"github.com/liangdas/mqant/module/modules"
 	"github.com/nats-io/nats.go"
+	"github.com/shangzongyu/mqant"
+	"github.com/shangzongyu/mqant/gate"
+	"github.com/shangzongyu/mqant/module/modules"
 
-	//"github.com/liangdas/mqant-modules/tracing"
+	//"github.com/shangzongyu/mqant-modules/tracing"
 	"fmt"
-	"github.com/liangdas/mqant/module"
-	"github.com/liangdas/mqant/registry"
-	"github.com/liangdas/mqant/selector"
-	"github.com/liangdas/mqantserver/server/chat"
-	"github.com/liangdas/mqantserver/server/gate"
-	"github.com/liangdas/mqantserver/server/helloworld"
-	"github.com/liangdas/mqantserver/server/hitball"
-	"github.com/liangdas/mqantserver/server/login"
-	"github.com/liangdas/mqantserver/server/user"
-	"github.com/liangdas/mqantserver/server/xaxb"
-	"github.com/liangdas/mqantserver/webapp"
+	"github.com/shangzongyu/mqant/module"
+	"github.com/shangzongyu/mqant/registry"
+	"github.com/shangzongyu/mqant/selector"
+	"github.com/shangzongyu/mqantserver/server/chat"
+	"github.com/shangzongyu/mqantserver/server/gate"
+	"github.com/shangzongyu/mqantserver/server/helloworld"
+	"github.com/shangzongyu/mqantserver/server/hitball"
+	"github.com/shangzongyu/mqantserver/server/login"
+	"github.com/shangzongyu/mqantserver/server/user"
+	"github.com/shangzongyu/mqantserver/server/xaxb"
+	"github.com/shangzongyu/mqantserver/webapp"
 	"math/rand"
 	"net/http"
 	_ "net/http/pprof"
@@ -35,13 +35,13 @@ func main() {
 
 	}
 	app := mqant.CreateApp(
-		module.Debug(true),//只有是在调试模式下才会在控制台打印日志, 非调试模式下只在日志文件中输出日志
+		module.Debug(true), //只有是在调试模式下才会在控制台打印日志, 非调试模式下只在日志文件中输出日志
 		module.Nats(nc),
 		module.Registry(rs),
 		module.SetJudgeGuest(func(session gate.Session) bool {
-			if session.GetUserId()==""{
+			if session.GetUserId() == "" {
 				return true
-			}else{
+			} else {
 				return false
 			}
 		}),

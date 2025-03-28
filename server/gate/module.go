@@ -1,17 +1,17 @@
-/**
-一定要记得在confin.json配置这个模块的参数,否则无法使用
-*/
 package mgate
 
 import (
 	"fmt"
-	"github.com/liangdas/mqant/conf"
-	"github.com/liangdas/mqant/gate"
-	"github.com/liangdas/mqant/gate/base"
-	"github.com/liangdas/mqant/log"
-	"github.com/liangdas/mqant/module"
 	"time"
+
+	"github.com/shangzongyu/mqant/conf"
+	"github.com/shangzongyu/mqant/gate"
+	"github.com/shangzongyu/mqant/gate/base"
+	"github.com/shangzongyu/mqant/log"
+	"github.com/shangzongyu/mqant/module"
 )
+
+// 一定要记得在confin.json配置这个模块的参数,否则无法使用
 
 var Module = func() module.Module {
 	gate := new(Gate)
@@ -52,17 +52,18 @@ func (this *Gate) OnInit(app module.App, settings *conf.ModuleSettings) {
 	this.Gate.SetStorageHandler(this) //设置持久化处理器
 }
 
-//当连接建立  并且MQTT协议握手成功
+// 当连接建立  并且MQTT协议握手成功
 func (this *Gate) Connect(session gate.Session) {
 	//log.Info("客户端建立了链接")
 }
 
-//当连接关闭	或者客户端主动发送MQTT DisConnect命令 ,这个函数中Session无法再继续后续的设置操作，只能读取部分配置内容了
+// 当连接关闭	或者客户端主动发送MQTT DisConnect命令 ,这个函数中Session无法再继续后续的设置操作，只能读取部分配置内容了
 func (this *Gate) DisConnect(session gate.Session) {
 	//log.Info("客户端断开了链接")
 }
 
-/**
+/*
+*
 是否需要对本次客户端请求进行跟踪
 */
 func (gate *Gate) OnRequestTracing(session gate.Session, topic string, msg []byte) bool {
@@ -77,7 +78,8 @@ func (gate *Gate) OnRequestTracing(session gate.Session, topic string, msg []byt
 	return true
 }
 
-/**
+/*
+*
 存储用户的Session信息
 Session Bind Userid以后每次设置 settings都会调用一次Storage
 */
@@ -86,7 +88,8 @@ func (gate *Gate) Storage(session gate.Session) (err error) {
 	return nil
 }
 
-/**
+/*
+*
 强制删除Session信息
 */
 func (gate *Gate) Delete(session gate.Session) (err error) {
@@ -94,7 +97,8 @@ func (gate *Gate) Delete(session gate.Session) (err error) {
 	return nil
 }
 
-/**
+/*
+*
 获取用户Session信息
 用户登录以后会调用Query获取最新信息
 */
@@ -103,7 +107,8 @@ func (gate *Gate) Query(Userid string) ([]byte, error) {
 	return nil, fmt.Errorf("no redis")
 }
 
-/**
+/*
+*
 用户心跳,一般用户在线时60s发送一次
 可以用来延长Session信息过期时间
 */
